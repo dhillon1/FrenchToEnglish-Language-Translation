@@ -1,0 +1,23 @@
+Assignment 3
+Created by:
+* Simranjeet Singh Dhillon
+
+Model creation for language translation
+
+The prequisite requirments to run the codes are as follows:
+
+* Tensorflow version greater than or equal to 2.0 should be installed in the system
+* Numpy should be in the system
+* Pandas should be in the system
+* Keras should be in the system
+* Import statement in the model should be in the latest version
+
+Output display:
+
+* Run all the cells before starting the prediction
+* To start a model enter yes in a input field.
+* After starting the model, enter sentence in french language
+* Output for english language will be displayed automatically.
+* Model will again ask for do you want to enter french sentence again and if yes, enter yes in input field. If you dont want to translate enter no, and the output will show the thankyou and close the output function.
+
+NOTE: Sometime when we save model, it sometime shows error so i had to downgrade the h5py dependency using the statement => pip install 'h5py==2.10.0'
