@@ -36,7 +36,7 @@
         android:id="@+id/textViewEnglish"
         android:layout_width="match_parent"
         android:layout_height="320dp"
-        android:hint="French translation"
+        android:hint="Output in english language"
         android:paddingStart="10dp"
         android:textSize="18sp"
         android:paddingTop="10dp"

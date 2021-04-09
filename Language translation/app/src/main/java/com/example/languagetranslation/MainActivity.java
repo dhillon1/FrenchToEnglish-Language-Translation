@@ -20,9 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-
+//main activity
 public class MainActivity extends AppCompatActivity {
 
+    //variables
     TextView english;
     EditText french;
     Button fTe;
@@ -34,17 +35,25 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //connections made vich ui
         english = (TextView) findViewById(R.id.textViewEnglish);
         french = (EditText) findViewById(R.id.editTextFrench);
         fTe = (Button) findViewById(R.id.fTe);
+
+        //loading json file
         InputStream english_index_is = getResources().openRawResource(R.raw.english_index_word);
         InputStream english_word_is = getResources().openRawResource(R.raw.english_word_index);
         InputStream french_index_is = getResources().openRawResource(R.raw.french_index_word);
         InputStream french_word_is = getResources().openRawResource(R.raw.french_word_index);
+
+        //scanning json file
         Scanner english_index_scanner =  new Scanner(english_index_is);
         Scanner english_word_scanner =  new Scanner(english_word_is);
         Scanner french_index_scanner =  new Scanner(french_index_is);
         Scanner french_word_scanner =  new Scanner(french_word_is);
+
+        //string builder
         StringBuilder english_index_sb  = new StringBuilder();
         StringBuilder english_word_sb  = new StringBuilder();
         StringBuilder french_index_sb  = new StringBuilder();
@@ -62,11 +71,14 @@ public class MainActivity extends AppCompatActivity {
         while (french_word_scanner.hasNextLine()){
             french_word_sb.append(french_word_scanner.nextLine());
         }
+
+        //arraylist
         french_word_array = new ArrayList();
         french_numbers = new int[16];
 
 
         try {
+            //parsing json file
             JSONArray jsonArrayFrench = new JSONArray(french_index_sb.toString());
             for(int arr=0; arr<jsonArrayFrench.length();arr++){
                 french_word_array.add(jsonArrayFrench.getJSONObject(arr).getString(String.valueOf(arr+1)));
@@ -76,12 +88,14 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        //button
         fTe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String french_text = french.getText().toString().trim();
                 try {
-                    
+
+                    //removing punctuation from input
                     String[] words = french_text.replaceAll("[^a-zA-Z ]", "").toLowerCase().split("\\s");
                     for(int q=0;q<words.length;q++){
                         for(int j=0;j<french_word_array.size();j++){
@@ -90,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     }
+                    //mode loading
                     MyModel model = MyModel.newInstance(MainActivity.this);
                     TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, 16}, DataType.FLOAT32);
                     inputFeature0.loadArray(french_numbers);
@@ -97,11 +112,14 @@ public class MainActivity extends AppCompatActivity {
                     TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
                     List<Integer> output = getMax(outputFeature0.getFloatArray());
                     String show = "";
+                    //model output
                     for(int i=0;i<output.size();i++){
                         try {
+                            //reading json
                             JSONArray jsonArray = new JSONArray(english_index_sb.toString());
 
                             if (output.get(i) != 0){
+                                //convert number to text
                                 show = show + jsonArray.getJSONObject(output.get(i)-1).getString(String.valueOf(output.get(i)))+ " ";
 
                             }
@@ -126,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //function for maximum value from array
     public List<Integer> getMax(float[] data){
         List<Integer> input= new ArrayList<Integer>();
         for (int i = 0;i<data.length;i=i+200){
